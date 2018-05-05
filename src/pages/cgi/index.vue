@@ -28,7 +28,7 @@ export default {
         login: false,
         success(result) {
           // util.showSuccess('请求成功完成')
-          console.log(result.data)
+          console.table(result.data)
           // that.setData({
           //   requestResult: JSON.stringify(result.data)
           // })
