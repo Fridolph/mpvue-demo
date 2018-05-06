@@ -14,7 +14,7 @@
     <div class="link-wrap">
       <a href="/pages/books/main">前端图书推荐 »</a>
       <a href="/pages/anime/main">动漫好番推荐 »</a>
-      <a href="/pages/cgi/main">cgi »</a>
+      <!-- <a href="/pages/cgi/main">cgi »</a> -->
     </div>
 
     <div class="footer-text">

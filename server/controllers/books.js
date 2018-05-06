@@ -1,6 +1,7 @@
 module.exports = ctx => {
   ctx.state.data = {
-    books: [{
+    books: [
+      {
         bid: '1',
         sort: 'js',
         src: 'https://img1.doubanio.com/view/subject/l/public/s29478358.jpg',

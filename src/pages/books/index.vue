@@ -8,45 +8,13 @@
       <i class="iconfont icon-liebiao11"></i>
     </div>
     <div class="books-wrapper">
-      <div class="item-box">
+      <div class="item-box" v-for="(v, index) in booklist" :key="v.bid">
         <div class="img-wrapper">
-          <img src="https://img1.doubanio.com/view/subject/l/public/s29478358.jpg" alt="img">
+          <img :src="v.src" alt="v.title" :data-index="index">
         </div>
-        <h2>深入理解es6</h2>
-        <p>【美】Nicholas C. Zakas</p>
-        <p>2017-7</p>
-      </div>
-      <div class="item-box">
-        <div class="img-wrapper">
-          <img src="https://img1.doubanio.com/view/subject/l/public/s29478358.jpg" alt="img">
-        </div>
-        <h2>深入理解es6</h2>
-        <p>【美】Nicholas C. Zakas</p>
-        <p>2017-7</p>
-      </div>
-      <div class="item-box">
-        <div class="img-wrapper">
-          <img src="https://img1.doubanio.com/view/subject/l/public/s29478358.jpg" alt="img">
-        </div>
-        <h2>深入理解es6</h2>
-        <p>【美】Nicholas C. Zakas</p>
-        <p>2017-7</p>
-      </div>
-      <div class="item-box">
-        <div class="img-wrapper">
-          <img src="https://img1.doubanio.com/view/subject/l/public/s29478358.jpg" alt="img">
-        </div>
-        <h2>深入理解es6</h2>
-        <p>【美】Nicholas C. Zakas</p>
-        <p>2017-7</p>
-      </div>
-      <div class="item-box">
-        <div class="img-wrapper">
-          <img src="https://img1.doubanio.com/view/subject/l/public/s29478358.jpg" alt="img">
-        </div>
-        <h2>深入理解es6</h2>
-        <p>【美】Nicholas C. Zakas</p>
-        <p>2017-7</p>
+        <h2>{{v.title}}</h2>
+        <p>{{v.author}}</p>
+        <p>{{v.pubtime}}</p>
       </div>
     </div>
 
@@ -55,23 +23,31 @@
         <i class="iconfont icon-fanhui"></i>
       </div>
       <ul>
-        <li>JavaScript</li>
-        <li>html&css</li>
-        <li>web相关知识</li>
-        <li>前端工具框架</li>
-        <li>职业领域拓展</li>
+        <li @click="selectType(0)">默认展示全部</li>
+        <li @click="selectType(1)">JavaScript</li>
+        <li @click="selectType(2)">html&css</li>
+        <li @click="selectType(3)">web相关知识</li>
+        <li @click="selectType(4)">前端工具框架</li>
+        <li @click="selectType(5)">职业领域拓展</li>
       </ul>
     </div>
   </div>
 </template>
 
 <script>
+const HOST = 'https://oyg5umzv.qcloud.la'
 export default {
   data() {
     return {
       books: [],
+      booklist: [],
       isSidebarShow: false,
       sortClicked: false
+    }
+  },
+  watch: {
+    books(newVal) {
+      this.booklist = newVal
     }
   },
   methods: {
@@ -81,7 +57,74 @@ export default {
     },
     hideSidebar() {
       this.isSidebarShow = !this.isSidebarShow
+    },
+    filterBooks(type) {
+      if (!type) {
+        this.booklist = this.books.filter(item => item.sort !== 'undefined')
+        this.isSidebarShow = false
+        return
+      }
+      this.booklist = this.books.filter(item => item.sort === type)
+      this.isSidebarShow = false
+    },
+    selectType(num) {
+      switch (num) {
+        case 0:
+          this.filterBooks()
+          return
+        case 1:
+          this.filterBooks('js')
+          return
+        case 2:
+          this.filterBooks('htmlcss')
+          return
+        case 3:
+          this.filterBooks('web')
+          return
+        case 4:
+          this.filterBooks('lib')
+          return
+        case 5:
+          this.filterBooks('other')
+          return
+        default:
+          return
+      }
+    },
+    testCgiBooks() {
+      // util.showBusy('请求中...')
+      let that = this
+      wx.getStorage({
+        key: 'booklist',
+        success(res) {
+          console.log('从缓存拿booklist', res.data)
+          that.books = res.data
+        },
+        fail(err) {
+          console.log(err)
+          wx.request({
+            url: `${HOST}/weapp/books`,
+            login: false,
+            success(result) {
+              // util.showSuccess('请求成功完成')
+              console.log('请求服务端拿到booklist', result.data.data.books)
+              that.books = result.data.data.books
+              wx.setStorage({
+                key: 'booklist',
+                data: result.data.data.books
+              })
+            },
+            fail(error) {
+              // util.showModel('请求失败', error)
+              console.log('request fail', error)
+            }
+          })
+        }
+      })
     }
+  },
+  created() {
+    this.testCgiBooks()
   }
 }
 </script>
@@ -116,7 +159,7 @@ export default {
   height 100%
   background linear-gradient(to bottom, rgba(215,228,238,0.94) , rgb(201,215,224))
   box-shadow -4rpx 0 8rpx rgba(0,0,0,.1)
-  transition all ease 0.6s
+  transition all ease-in-out 0.4s
   &.show-sidebar
     right 0
   ul
