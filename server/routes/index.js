@@ -2,7 +2,7 @@
  * ajax 服务路由集合
  */
 const router = require('koa-router')({
-    prefix: '/weapp'
+  prefix: '/weapp'
 })
 const controllers = require('../controllers')
 
@@ -32,7 +32,11 @@ router.get('/message', controllers.message.get)
 // POST 用来处理微信转发过来的客服消息
 router.post('/message', controllers.message.post)
 
-// 测试
+// 图书列表
 router.get('/books', controllers.books)
+
+// 动漫推荐列表
+router.get('/anime/201804', controllers.anime['201804'])
+router.get('/anime/201801', controllers.anime['201801'])
 
 module.exports = router

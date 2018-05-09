@@ -2,9 +2,9 @@
   <div class="page-books">
     <h1 class="main-title">
       前端好书推荐
-      <small v-if="!sortClicked">点击图标可切换分类</small>
     </h1>
     <div class="icon-action" @click="showSidebar">
+      <span>分类</span>
       <i class="iconfont icon-liebiao11"></i>
     </div>
     <div class="books-wrapper">
@@ -41,8 +41,7 @@ export default {
     return {
       books: [],
       booklist: [],
-      isSidebarShow: false,
-      sortClicked: false
+      isSidebarShow: false
     }
   },
   watch: {
@@ -53,7 +52,6 @@ export default {
   methods: {
     showSidebar() {
       this.isSidebarShow = true
-      this.sortClicked = true
     },
     hideSidebar() {
       this.isSidebarShow = !this.isSidebarShow
@@ -97,7 +95,7 @@ export default {
       wx.getStorage({
         key: 'booklist',
         success(res) {
-          console.log('从缓存拿booklist', res.data)
+          // console.log('从缓存拿booklist', res.data)
           that.books = res.data
         },
         fail(err) {
@@ -107,7 +105,7 @@ export default {
             login: false,
             success(result) {
               // util.showSuccess('请求成功完成')
-              console.log('请求服务端拿到booklist', result.data.data.books)
+              // console.log('请求服务端拿到booklist', result.data.data.books)
               that.books = result.data.data.books
               wx.setStorage({
                 key: 'booklist',
@@ -146,6 +144,13 @@ export default {
   position fixed
   right 10rpx
   top 10rpx
+  span, i
+    display inline-block
+    vertical-align middle
+  span
+    font-size 12px
+    color #999
+    transform translateX(8rpx)
   .icon-liebiao11
     font-size 24px
     color #666
